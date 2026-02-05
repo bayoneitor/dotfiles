@@ -1,0 +1,17 @@
+[core]
+	editor = vim
+	autocrlf = input
+[init]
+	defaultBranch = master
+[color]
+	ui = auto
+[alias]
+	s = status
+	c = commit
+	co = checkout
+	br = branch
+	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	unstage = reset HEAD --
+	last = log -1 HEAD
+[include]
+	path = ~/.gitconfig.local

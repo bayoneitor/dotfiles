@@ -1,0 +1,11 @@
+# --- Interfaz ---
+set linenumbers       # Muestra números de línea
+set mouse             # Permite mover el cursor con el clic del ratón
+#set smooth            # Desplazamiento suave (no salto de página)
+set tabsize 4         # Tabulaciones de 4 espacios
+set tabstospaces      # Convierte tabs en espacios (estándar en Python)
+set titlecolor bold,white,blue # Barra de título bonita
+
+# --- Colores (Syntax Highlighting) ---
+# Esto activa los colores para todos los lenguajes que Ubuntu ya trae
+include "/usr/share/nano/*.nanorc"
