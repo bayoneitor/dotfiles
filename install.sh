@@ -31,8 +31,27 @@ sudo apt install -y \
     tmux \
     nano \
     vim \
-    gnupg \
-    zoxide 
+    gnupg
+
+# 1.b Instalar ZOXIDE (cd inteligente) desde GitHub, NO desde apt.
+# apt empaqueta la v0.4.3 (2020), que nombra su helper interno '_z_cd' con un solo
+# guion bajo -> colisiona con el namespace de autocompletado de zsh (_*) y revienta
+# el 'cd' en shells no interactivas. Desde la v0.5 usa '__zoxide_*' y no colisiona.
+ZOXIDE_MIN="0.5.0"
+if ! command -v zoxide &> /dev/null || \
+   [ "$(printf '%s\n' "$ZOXIDE_MIN" "$(zoxide --version | awk '{print $2}' | tr -d 'v')" | sort -V | head -1)" != "$ZOXIDE_MIN" ]; then
+    print_msg "Instalando zoxide (última versión, desde GitHub)..."
+    ZOXIDE_VER=$(curl -s https://api.github.com/repos/ajeetdsouza/zoxide/releases/latest | grep -oP '"tag_name":\s*"v\K[^"]+')
+    TMP=$(mktemp -d)
+    curl -sSfL "https://github.com/ajeetdsouza/zoxide/releases/download/v${ZOXIDE_VER}/zoxide-${ZOXIDE_VER}-x86_64-unknown-linux-musl.tar.gz" \
+        | tar -xz -C "$TMP"
+    mkdir -p "$HOME/.local/bin"
+    install -m 0755 "$TMP/zoxide" "$HOME/.local/bin/zoxide"
+    rm -rf "$TMP"
+    print_msg "zoxide $ZOXIDE_VER instalado en ~/.local/bin (tiene prioridad sobre /usr/bin)."
+else
+    print_msg "zoxide ya está instalado y es lo bastante moderno."
+fi
 
 # 2. Instalar EZA (Reemplazo moderno de ls)
 if ! command -v eza &> /dev/null; then

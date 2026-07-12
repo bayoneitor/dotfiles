@@ -46,8 +46,19 @@ export NVM_DIR="$HOME/.nvm"
 # --- ZOXIDE (Better CD) ---
 # Borramos cualquier alias 'z' previo para evitar errores
 unalias z 2>/dev/null
-eval "$(zoxide init zsh)"
-alias cd="z"
+
+# --cmd cd define 'cd' como FUNCIÓN (no como alias): si el argumento es un directorio
+# real hace un cd normal, y si no, salta por frecuencia. Deja intactos 'cd -', 'cd ..'
+# y las rutas relativas, así que no rompe scripts.
+#
+# NO usar 'alias cd="z"' (que es lo que había): con la zoxide de apt (v0.4.3, de 2020)
+# el helper interno se llama '_z_cd', con UN solo guion bajo. En zsh todo lo que empieza
+# por '_' cae en el namespace del autocompletado, que se autocarga desde fpath, y en
+# shells NO interactivas ese helper no llega a definirse aunque 'z' sí -> el alias
+# rompía TODOS los cd con "z:14: command not found: _z_cd".
+# La zoxide moderna usa '__zoxide_*' (doble guion) y no colisiona. Requiere >= 0.5;
+# ver install.sh, que la baja de GitHub porque la de apt está fosilizada.
+eval "$(zoxide init --cmd cd zsh)"
 
 # --- MODERN ALIASES ---
 alias cat='bat'
@@ -78,3 +89,9 @@ ZSH_ALIAS_FINDER_AUTOMATIC=true
 
 # --- FZF ---
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# bun completions
+[ -s "/home/dbayona/.bun/_bun" ] && source "/home/dbayona/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
